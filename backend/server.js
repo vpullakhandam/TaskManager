@@ -4,23 +4,25 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const app = express();
-const port = process.env.REACT_PORT || 5000;
+const port = process.env.PORT || 5000;
 
-// Middlewares
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Connecting to Database
+// Connect to MongoDB
+const uri = process.env.MONGODB_URI;
+mongoose.connect(uri)
+  .then(() => console.log("MongoDB database connection established successfully"))
+  .catch((err) => console.error("MongoDB connection error: ", err));
 
-const uri = process.env.REACT_MONGODB_URI;
+// Import routes
+const taskRoutes = require("./routes/tasks");
 
-moongose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+// Use routes
+app.use("/api/tasks", taskRoutes);
 
-const connection = moongose.connection;
-connection.once("open", () => {
-  console.log("Connection established with MongoDB");
-});
-
+// Start server
 app.listen(port, () => {
-  console.log(`Sever running on port : ${port}`);
+  console.log(`Server is running on port: ${port}`);
 });
