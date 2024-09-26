@@ -4,24 +4,23 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.REACT_PORT || 5000;
 
 // Middlewares
-
 app.use(cors());
 app.use(express.json());
 
 // Connecting to Database
 
-const uri = process.env.MONGODB_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const uri = process.env.REACT_MONGODB_URI;
 
-const connection = mongoose.connection;
+moongose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
+const connection = moongose.connection;
 connection.once("open", () => {
-  console.log("MongoDB database connection established");
+  console.log("Connection established with MongoDB");
 });
 
 app.listen(port, () => {
-  console.log("Sever is running on port : " + " " + port);
+  console.log(`Sever running on port : ${port}`);
 });
