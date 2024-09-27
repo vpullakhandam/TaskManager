@@ -1,62 +1,58 @@
 const express = require("express");
-const app = express();
+const router = express.Router();
 const Task = require("../models/Task");
 
-// GET REQUEST
-app.get("/api/tasks", (req, res) => {
+// GET all tasks
+router.get("/", (req, res) => {
   Task.find()
-    .then((tasks) => {
-      res.json(tasks);
-    })
-    .catch((err) => res.status(400).json(`Error: ${err}`));
+    .then(tasks => res.json(tasks))
+    .catch(err => res.status(400).json("Error: " + err));
 });
 
-// POST REQUEST
-app.post("/api/tasks", (req, res) => {
+// POST a new task
+router.post("/", (req, res) => {
   const { title, description, completed } = req.body;
 
   const newTask = new Task({
     title,
     description,
-    completed,
+    completed
   });
 
   newTask
     .save()
     .then(() => res.json("Task added!"))
-    .catch((err) => res.status(400).json(`Error: ${err}`));
+    .catch(err => res.status(400).json("Error: " + err));
 });
 
-// GET task based on 'id'
-app.get("/api/tasks/:id", (req, res) => {
+// GET a task by ID
+router.get("/:id", (req, res) => {
   Task.findById(req.params.id)
-    .then((task) => res.json(task))
-    .catch((err) => res.status(400).json(`Error: ${err}`));
+    .then(task => res.json(task))
+    .catch(err => res.status(400).json("Error: " + err));
 });
 
-// PUT which is used for 'UPDATING' the task
-app.put("/api/tasks/:id", (req, res) => {
+// UPDATE a task by ID
+router.put("/:id", (req, res) => {
   Task.findById(req.params.id)
-    .then((task) => {
+    .then(task => {
       task.title = req.body.title;
       task.description = req.body.description;
       task.completed = req.body.completed;
 
       task
         .save()
-        .then(() => res.json("Task Updated!"))
-        .catch((err) => res.status(400).json(`Error: ${err}`));
+        .then(() => res.json("Task updated!"))
+        .catch(err => res.status(400).json("Error: " + err));
     })
-    .catch((err) => res.status(400).json(`Error: ${err}`));
+    .catch(err => res.status(400).json("Error: " + err));
 });
 
-// DELETE a task by 'id'
-app.delete("/api/tasks/:id", (req, res) => {
+// DELETE a task by ID
+router.delete("/:id", (req, res) => {
   Task.findByIdAndDelete(req.params.id)
-    .then(() => {
-      res.json("Task Deleted!");
-    })
-    .catch((err) => res.status(400).json(`Error: ${err}`));
+    .then(() => res.json("Task deleted!"))
+    .catch(err => res.status(400).json("Error: " + err));
 });
 
-module.exports = app;
+module.exports = router;
