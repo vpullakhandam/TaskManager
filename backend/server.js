@@ -5,7 +5,7 @@ require("dotenv").config();
 const taskRoutes = require("./routes/tasks");
 
 const app = express();
-const port = process.env.PORT;
+const port = 4000;
 const uri = process.env.MONGODB_URI;
 
 // Middlewares
@@ -25,5 +25,5 @@ connection.once("open", () => {
 app.use("/api/tasks", taskRoutes);
 
 app.listen(port, () => {
-  console.log(`Server is running on port : ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
