@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenev").config();
+require("dotenv").config();
 const taskRoutes = require("./routes/tasks");
 
 const app = express();
@@ -11,7 +11,7 @@ const uri = process.env.MONGODB_URI;
 // Middlewares
 
 app.use(cors());
-app.use(express.body());
+app.use(express.json());
 
 // Connecting to MongoDB
 
