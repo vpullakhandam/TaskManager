@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { motion, AnimatePresence } from 'framer-motion';
-import { PlusIcon, PencilIcon, TrashIcon } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
+import { PlusIcon, PencilIcon, TrashIcon } from "lucide-react";
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState({ title: '', description: '', completed: false });
+  const [newTask, setNewTask] = useState({
+    title: "",
+    description: "",
+    completed: false,
+  });
   const [editingTask, setEditingTask] = useState(null);
-  const [error, setError] = useState(''); // Error state
+  const [error, setError] = useState(""); // Error state
 
   useEffect(() => {
     fetchTasks();
@@ -15,50 +19,55 @@ const TaskList = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/api/tasks');
+      const response = await axios.get("http://localhost:4000/api/tasks");
       setTasks(response.data);
     } catch (error) {
-      console.error('Error fetching tasks:', error);
-      alert('Failed to fetch tasks. Please try again.');
+      console.error("Error fetching tasks:", error);
+      alert("Failed to fetch tasks. Please try again.");
     }
   };
 
   const addTask = async (e) => {
     e.preventDefault();
     if (!newTask.title || !newTask.description) {
-      setError('Failed to add the task, please fill the fields to add the task');
+      setError(
+        "Failed to add the task, please fill the fields to add the task"
+      );
       return;
     }
 
     try {
-      await axios.post('http://localhost:4000/api/tasks', newTask);
-      setNewTask({ title: '', description: '', completed: false });
-      setError(''); // Clear error after successful addition
+      await axios.post("http://localhost:4000/api/tasks", newTask);
+      setNewTask({ title: "", description: "", completed: false });
+      setError(""); // Clear error after successful addition
       fetchTasks();
     } catch (error) {
-      console.error('Error adding task:', error);
-      setError('Failed to add the task, please try again.');
+      console.error("Error adding task:", error);
+      setError("Failed to add the task, please try again.");
     }
   };
 
   const deleteTask = async (id) => {
     try {
       await axios.delete(`http://localhost:4000/api/tasks/${id}`);
-      setTasks(tasks.filter(task => task._id !== id));
+      setTasks(tasks.filter((task) => task._id !== id));
     } catch (error) {
-      console.error('Error deleting task:', error);
-      alert('Failed to delete task. Please try again.');
+      console.error("Error deleting task:", error);
+      alert("Failed to delete task. Please try again.");
     }
   };
 
   const toggleComplete = async (task) => {
     try {
       const updatedTask = { ...task, completed: !task.completed };
-      await axios.put(`http://localhost:4000/api/tasks/${task._id}`, updatedTask);
-      setTasks(tasks.map(t => t._id === task._id ? updatedTask : t));
+      await axios.put(
+        `http://localhost:4000/api/tasks/${task._id}`,
+        updatedTask
+      );
+      setTasks(tasks.map((t) => (t._id === task._id ? updatedTask : t)));
     } catch (error) {
-      console.error('Error updating task:', error);
-      alert('Failed to update task. Please try again.');
+      console.error("Error updating task:", error);
+      alert("Failed to update task. Please try again.");
     }
   };
 
@@ -72,12 +81,17 @@ const TaskList = () => {
 
   const saveEdit = async () => {
     try {
-      await axios.put(`http://localhost:4000/api/tasks/${editingTask._id}`, editingTask);
-      setTasks(tasks.map(task => task._id === editingTask._id ? editingTask : task));
+      await axios.put(
+        `http://localhost:4000/api/tasks/${editingTask._id}`,
+        editingTask
+      );
+      setTasks(
+        tasks.map((task) => (task._id === editingTask._id ? editingTask : task))
+      );
       setEditingTask(null);
     } catch (error) {
-      console.error('Error updating task:', error);
-      alert('Failed to update task. Please try again.');
+      console.error("Error updating task:", error);
+      alert("Failed to update task. Please try again.");
     }
   };
 
@@ -92,10 +106,18 @@ const TaskList = () => {
       >
         <div className="flex justify-between items-center">
           <div>
-            <h2 className={`text-lg font-bold ${task.completed ? 'line-through text-gray-500' : ''}`}>
+            <h2
+              className={`text-lg font-bold ${
+                task.completed ? "line-through text-gray-500" : ""
+              }`}
+            >
               {task.title}
             </h2>
-            <p className={`${task.completed ? 'line-through text-gray-500' : ''}`}>
+            <p
+              className={`${
+                task.completed ? "line-through text-gray-500" : ""
+              }`}
+            >
               {task.description}
             </p>
           </div>
@@ -103,10 +125,10 @@ const TaskList = () => {
             <button
               onClick={() => toggleComplete(task)}
               className={`px-4 py-2 rounded-md font-bold ${
-                task.completed ? 'bg-green-500 text-white' : 'bg-gray-300'
+                task.completed ? "bg-green-500 text-white" : "bg-gray-300"
               }`}
             >
-              {task.completed ? 'Completed' : 'Mark Done'}
+              {task.completed ? "Completed" : "Mark Done"}
             </button>
             <button
               onClick={() => startEditing(task)}
@@ -135,7 +157,7 @@ const TaskList = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-5xl font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600"
         >
-          Task Cosmos
+          Task Manager
         </motion.h1>
 
         <motion.form
@@ -152,18 +174,26 @@ const TaskList = () => {
                   type="text"
                   placeholder="Task title"
                   value={newTask.title}
-                  onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, title: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
                 <input
                   type="text"
                   placeholder="Task description"
                   value={newTask.description}
-                  onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, description: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
-                {error && <p className="text-red-500 font-bold">{error}</p>} {/* Error message */}
-                <button type="submit" className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">
+                {error && <p className="text-red-500 font-bold">{error}</p>}{" "}
+                {/* Error message */}
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-md transition duration-300"
+                >
                   <PlusIcon className="h-5 w-5 inline mr-2" />
                   Add Task
                 </button>
@@ -190,13 +220,20 @@ const TaskList = () => {
                 <input
                   type="text"
                   value={editingTask.title}
-                  onChange={(e) => setEditingTask({ ...editingTask, title: e.target.value })}
+                  onChange={(e) =>
+                    setEditingTask({ ...editingTask, title: e.target.value })
+                  }
                   className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
                 <input
                   type="text"
                   value={editingTask.description}
-                  onChange={(e) => setEditingTask({ ...editingTask, description: e.target.value })}
+                  onChange={(e) =>
+                    setEditingTask({
+                      ...editingTask,
+                      description: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
                 <div className="flex justify-between">
