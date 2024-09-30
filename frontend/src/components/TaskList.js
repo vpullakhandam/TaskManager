@@ -7,6 +7,7 @@ const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({ title: '', description: '', completed: false });
   const [editingTask, setEditingTask] = useState(null);
+  const [error, setError] = useState(''); // Error state
 
   useEffect(() => {
     fetchTasks();
@@ -24,13 +25,19 @@ const TaskList = () => {
 
   const addTask = async (e) => {
     e.preventDefault();
+    if (!newTask.title || !newTask.description) {
+      setError('Failed to add the task, please fill the fields to add the task');
+      return;
+    }
+
     try {
       await axios.post('http://localhost:4000/api/tasks', newTask);
       setNewTask({ title: '', description: '', completed: false });
+      setError(''); // Clear error after successful addition
       fetchTasks();
     } catch (error) {
       console.error('Error adding task:', error);
-      alert('Failed to add task. Please try again.');
+      setError('Failed to add the task, please try again.');
     }
   };
 
@@ -74,7 +81,6 @@ const TaskList = () => {
     }
   };
 
-  // TaskCard component definition within TaskList
   const TaskCard = ({ task }) => {
     return (
       <motion.div
@@ -156,6 +162,7 @@ const TaskList = () => {
                   onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
+                {error && <p className="text-red-500 font-bold">{error}</p>} {/* Error message */}
                 <button type="submit" className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">
                   <PlusIcon className="h-5 w-5 inline mr-2" />
                   Add Task
