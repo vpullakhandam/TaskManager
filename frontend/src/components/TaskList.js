@@ -11,7 +11,6 @@ const TaskList = () => {
     completed: false,
   });
   const [editingTask, setEditingTask] = useState(null);
-  const [error, setError] = useState(""); // Error state
 
   useEffect(() => {
     fetchTasks();
@@ -19,7 +18,7 @@ const TaskList = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get("https://taskmanager-backend-1564.onrender.com/api/tasks");
+      const response = await axios.get("http://localhost:5001/api/tasks");
       setTasks(response.data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
@@ -29,27 +28,19 @@ const TaskList = () => {
 
   const addTask = async (e) => {
     e.preventDefault();
-    if (!newTask.title || !newTask.description) {
-      setError(
-        "Failed to add the task, please fill the fields to add the task"
-      );
-      return;
-    }
-
     try {
-      await axios.post("https://taskmanager-backend-1564.onrender.com/api/tasks", newTask);
+      await axios.post("http://localhost:5001/api/tasks", newTask);
       setNewTask({ title: "", description: "", completed: false });
-      setError(""); // Clear error after successful addition
       fetchTasks();
     } catch (error) {
       console.error("Error adding task:", error);
-      setError("Failed to add the task, please try again.");
+      alert("Failed to add task. Please try again.");
     }
   };
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`https://taskmanager-backend-1564.onrender.com/api/tasks/${id}`);
+      await axios.delete(`http://localhost:5001/api/tasks/${id}`);
       setTasks(tasks.filter((task) => task._id !== id));
     } catch (error) {
       console.error("Error deleting task:", error);
@@ -61,7 +52,7 @@ const TaskList = () => {
     try {
       const updatedTask = { ...task, completed: !task.completed };
       await axios.put(
-        `https://taskmanager-backend-1564.onrender.com/api/tasks/${task._id}`,
+        `http://localhost:5001/api/tasks/${task._id}`,
         updatedTask
       );
       setTasks(tasks.map((t) => (t._id === task._id ? updatedTask : t)));
@@ -82,7 +73,7 @@ const TaskList = () => {
   const saveEdit = async () => {
     try {
       await axios.put(
-        `https://taskmanager-backend-1564.onrender.com/api/tasks/${editingTask._id}`,
+        `http://localhost:5001/api/tasks/${editingTask._id}`,
         editingTask
       );
       setTasks(
@@ -95,6 +86,7 @@ const TaskList = () => {
     }
   };
 
+  // TaskCard component definition within TaskList
   const TaskCard = ({ task }) => {
     return (
       <motion.div
@@ -188,8 +180,6 @@ const TaskList = () => {
                   }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
-                {error && <p className="text-red-500 font-bold">{error}</p>}{" "}
-                {/* Error message */}
                 <button
                   type="submit"
                   className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-2 px-4 rounded-md transition duration-300"
