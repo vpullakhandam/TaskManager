@@ -31,7 +31,6 @@ Before you begin, ensure you have met the following requirements:
 
    ```bash
    git clone https://github.com/yourusername/task-management-app.git
-   cd task-management-app
    ```
 
 2. Install backend dependencies:
