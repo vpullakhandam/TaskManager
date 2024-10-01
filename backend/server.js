@@ -5,7 +5,7 @@ require("dotenv").config();
 const taskRoutes = require("./routes/tasks");
 
 const app = express();
-const port = 4000;
+const port = 4000 || process.env.PORT;
 const uri = process.env.MONGODB_URI;
 
 // Middlewares
