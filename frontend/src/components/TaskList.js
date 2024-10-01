@@ -19,7 +19,7 @@ const TaskList = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/tasks");
+      const response = await axios.get("https://taskmanager-backend-1564.onrender.com/api/tasks");
       setTasks(response.data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
@@ -37,7 +37,7 @@ const TaskList = () => {
     }
 
     try {
-      await axios.post("http://localhost:4000/api/tasks", newTask);
+      await axios.post("https://taskmanager-backend-1564.onrender.com/api/tasks", newTask);
       setNewTask({ title: "", description: "", completed: false });
       setError(""); // Clear error after successful addition
       fetchTasks();
@@ -49,7 +49,7 @@ const TaskList = () => {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/api/tasks/${id}`);
+      await axios.delete(`https://taskmanager-backend-1564.onrender.com/api/tasks/${id}`);
       setTasks(tasks.filter((task) => task._id !== id));
     } catch (error) {
       console.error("Error deleting task:", error);
@@ -61,7 +61,7 @@ const TaskList = () => {
     try {
       const updatedTask = { ...task, completed: !task.completed };
       await axios.put(
-        `http://localhost:4000/api/tasks/${task._id}`,
+        `https://taskmanager-backend-1564.onrender.com/api/tasks/${task._id}`,
         updatedTask
       );
       setTasks(tasks.map((t) => (t._id === task._id ? updatedTask : t)));
@@ -82,7 +82,7 @@ const TaskList = () => {
   const saveEdit = async () => {
     try {
       await axios.put(
-        `http://localhost:4000/api/tasks/${editingTask._id}`,
+        `https://taskmanager-backend-1564.onrender.com/api/tasks/${editingTask._id}`,
         editingTask
       );
       setTasks(
